@@ -1,0 +1,26 @@
+docs/
+# frontend
+client/node_modules/
+client/dist/
+
+# backend
+server/node_modules/
+
+# env
+.env
+client/.env
+server/.env
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# misc
+coverage/
