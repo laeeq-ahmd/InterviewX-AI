@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: interviewx
+data:
+  PORT: "8000"
+  CHROMA_URL: "http://chromadb-service:8001"
+---
+# IMPORTANT: Never commit real secrets here.
+# Use kubectl create secret or an external secrets manager (AWS Secrets Manager, SealedSecrets).
+# These are placeholder values only — replace via kubectl before deploying.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backend-secrets
+  namespace: interviewx
+type: Opaque
+stringData:
+  MONGODB_URL: "your_mongodb_url"
+  JWT_SECRET: "your_jwt_secret"
+  OPENROUTER_API_KEY: "your_openrouter_api_key"
+  RAZORPAY_KEY_ID: "your_razorpay_key_id"
+  RAZORPAY_KEY_SECRET: "your_razorpay_key_secret"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: interviewx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: your-dockerhub-user/interviewx-backend:latest # Replace with your image registry
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: interviewx
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

@@ -9,24 +9,35 @@ import axios from 'axios';
 import { ServerUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { setUserData } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 function Auth({isModel = false}) {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState('')
 
     const handleGoogleAuth = async () => {
+        if (loading) return;
+        setLoading(true)
+        setError('')
         try {
-            const response = await signInWithPopup(auth,provider)
+            const response = await signInWithPopup(auth, provider)
             let User = response.user
             let name = User.displayName
             let email = User.email
-            const result = await axios.post(ServerUrl + "/api/auth/google" , {name , email} , {withCredentials:true})
+            console.log("[Auth] Firebase OK:", email)
+            const result = await axios.post(ServerUrl + "/api/auth/google", {name, email}, {withCredentials: true})
+            console.log("[Auth] Backend OK:", result.data)
             dispatch(setUserData(result.data))
-            
-
-
-            
+            if (!isModel) {
+                navigate("/")
+            }
         } catch (error) {
-            console.log(error)
-              dispatch(setUserData(null))
+            console.error("[Auth] Error:", error?.response?.data || error?.message || error)
+            setError(error?.response?.data?.message || error?.message || "Sign in failed. Please try again.")
+            dispatch(setUserData(null))
+        } finally {
+            setLoading(false)
         }
     }
   return (
@@ -48,7 +59,10 @@ function Auth({isModel = false}) {
                     <BsRobot size={18}/>
 
                 </div>
-                <h2 className='font-semibold text-lg'>InterviewIQ.AI</h2>
+                <div className='flex flex-col'>
+                    <h2 className='font-semibold text-lg leading-tight text-gray-800'>CareerX AI</h2>
+                    <span className='text-[10px] text-gray-400 font-medium tracking-wide block -mt-1'>(Formerly InterviewX AI)</span>
+                </div>
             </div>
 
             <h1 className='text-2xl md:text-3xl font-semibold text-center leading-snug mb-4'>
@@ -68,14 +82,19 @@ function Auth({isModel = false}) {
 
             <motion.button 
             onClick={handleGoogleAuth}
+            disabled={loading}
             whileHover={{opacity:0.9 , scale:1.03}}
             whileTap={{opacity:1 , scale:0.98}}
-            className='w-full flex items-center justify-center gap-3 py-3 bg-black text-white rounded-full shadow-md '>
+            className='w-full flex items-center justify-center gap-3 py-3 bg-black text-white rounded-full shadow-md disabled:opacity-60 disabled:cursor-not-allowed'>
                 <FcGoogle size={20}/>
-                Continue with Google
-
-   
+                {loading ? "Signing in..." : "Continue with Google"}
             </motion.button>
+
+            {error && (
+                <p className='mt-4 text-center text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-3'>
+                    {error}
+                </p>
+            )}
         </motion.div>
 
       

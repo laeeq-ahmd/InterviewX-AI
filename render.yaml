@@ -1,0 +1,61 @@
+services:
+  # ── Backend API ───────────────────────────────────────────────────
+  - type: web
+    name: careerx-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    region: singapore
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: MONGODB_URL
+        sync: false        # set manually in Render dashboard
+      - key: JWT_SECRET
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false        # set to your Render client URL e.g. https://careerx-client.onrender.com
+      - key: CHROMA_URL
+        sync: false        # set to your Render chromadb URL e.g. https://careerx-chromadb.onrender.com
+
+  # ── Frontend (Static Site) ───────────────────────────────────────
+  - type: web
+    name: careerx-client
+    runtime: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: ./client/dist
+    region: singapore
+    plan: free
+    routes:
+      - type: rewrite
+        source: "/*"
+        destination: /index.html   # SPA fallback — same as nginx try_files
+    envVars:
+      - key: VITE_SERVER_URL
+        sync: false        # set to your Render server URL e.g. https://careerx-server.onrender.com
+      - key: VITE_FIREBASE_APIKEY
+        sync: false
+      - key: VITE_RAZORPAY_KEY_ID
+        sync: false
+
+  # ── ChromaDB Vector Store ────────────────────────────────────────
+  - type: web
+    name: careerx-chromadb
+    runtime: docker
+    image:
+      url: docker.io/chromadb/chroma:latest
+    region: singapore
+    plan: free
+    # NOTE: Free tier Render services spin down after 15 min inactivity.
+    # ChromaDB will lose vector state on restart. Acceptable for portfolio.
+    # Upgrade path: Pinecone or Qdrant for persistent production use.

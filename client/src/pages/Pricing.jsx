@@ -17,10 +17,10 @@ function Pricing() {
       id: "free",
       name: "Free",
       price: "₹0",
-      credits: 100,
+      credits: 1000,
       description: "Perfect for beginners starting interview preparation.",
       features: [
-        "100 AI Interview Credits",
+        "1000 AI Interview Credits",
         "Basic Performance Report",
         "Voice Interview Access",
         "Limited History Tracking",
@@ -31,10 +31,10 @@ function Pricing() {
       id: "basic",
       name: "Starter Pack",
       price: "₹100",
-      credits: 150,
+      credits: 750,
       description: "Great for focused practice and skill improvement.",
       features: [
-        "150 AI Interview Credits",
+        "750 AI Interview Credits",
         "Detailed Feedback",
         "Performance Analytics",
         "Full Interview History",
@@ -44,10 +44,10 @@ function Pricing() {
       id: "pro",
       name: "Pro Pack",
       price: "₹500",
-      credits: 650,
+      credits: 5000,
       description: "Best value for serious job preparation.",
       features: [
-        "650 AI Interview Credits",
+        "5000 AI Interview Credits",
         "Advanced AI Feedback",
         "Skill Trend Analysis",
         "Priority AI Processing",
@@ -62,36 +62,36 @@ function Pricing() {
     try {
       setLoadingPlan(plan.id)
 
-      const amount =  
-      plan.id === "basic" ? 100 :
-      plan.id === "pro" ? 500 : 0;
+      const amount =
+        plan.id === "basic" ? 100 :
+          plan.id === "pro" ? 500 : 0;
 
-      const result = await axios.post(ServerUrl + "/api/payment/order" , {
+      const result = await axios.post(ServerUrl + "/api/payment/order", {
         planId: plan.id,
         amount: amount,
         credits: plan.credits,
-      },{withCredentials:true})
-      
+      }, { withCredentials: true })
+
 
       const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: result.data.amount,
-      currency: "INR",
-      name: "InterviewIQ.AI",
-      description: `${plan.name} - ${plan.credits} Credits`,
-      order_id: result.data.id,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: result.data.amount,
+        currency: "INR",
+        name: "CareerX AI (Formerly InterviewX AI)",
+        description: `${plan.name} - ${plan.credits} Credits`,
+        order_id: result.data.id,
 
-      handler:async function (response) {
-        const verifypay = await axios.post(ServerUrl + "/api/payment/verify" ,response , {withCredentials:true})
-        dispatch(setUserData(verifypay.data.user))
+        handler: async function (response) {
+          const verifypay = await axios.post(ServerUrl + "/api/payment/verify", response, { withCredentials: true })
+          dispatch(setUserData(verifypay.data.user))
 
           alert("Payment Successful 🎉 Credits Added!");
           navigate("/")
 
-      },
-      theme:{
-        color: "#10b981",
-      },
+        },
+        theme: {
+          color: "#10b981",
+        },
 
       }
 
@@ -100,8 +100,8 @@ function Pricing() {
 
       setLoadingPlan(null);
     } catch (error) {
-     console.log(error)
-     setLoadingPlan(null);
+      console.log(error)
+      setLoadingPlan(null);
     }
   }
 
@@ -194,7 +194,7 @@ function Pricing() {
 
               {!plan.default &&
                 <button
-                disabled={loadingPlan === plan.id}
+                  disabled={loadingPlan === plan.id}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!isSelected) {
