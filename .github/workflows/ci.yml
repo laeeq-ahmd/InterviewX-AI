@@ -31,6 +31,9 @@ jobs:
         run: npm test
         env:
           NODE_ENV: test
+          RAZORPAY_KEY_ID: "test_key_id"
+          RAZORPAY_KEY_SECRET: "test_key_secret"
+          JWT_SECRET: "test_jwt_secret"
 
       - name: Validate Docker build (server)
         run: docker build -t careerx-server ./server
