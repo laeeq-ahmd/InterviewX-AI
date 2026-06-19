@@ -50,8 +50,9 @@ services:
   # ── ChromaDB Vector Store ────────────────────────────────────────
   - type: web
     name: careerx-chromadb
-    runtime: image
-    image: docker.io/chromadb/chroma:latest
+    env: image
+    image:
+      url: docker.io/chromadb/chroma:latest
     region: singapore
     plan: free
     # NOTE: Free tier Render services spin down after 15 min inactivity.
