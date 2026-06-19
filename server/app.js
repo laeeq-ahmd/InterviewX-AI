@@ -22,6 +22,13 @@ app.use(cors({
         
         if (cleanClientUrl && cleanOrigin === cleanClientUrl) return callback(null, true);
         
+        // Fallback for Render environments (Portfolio project safe)
+        if (cleanOrigin.endsWith(".onrender.com")) {
+            console.warn(`[CORS Warning] Origin ${cleanOrigin} allowed by Render fallback. Expected: ${cleanClientUrl}`);
+            return callback(null, true);
+        }
+        
+        console.error(`[CORS Error] Blocked origin: ${cleanOrigin} | Expected: ${cleanClientUrl}`);
         callback(new Error("Not allowed by CORS"));
     },
     credentials: true
