@@ -15,7 +15,13 @@ app.use(cors({
     origin: function(origin, callback) {
         if (!origin) return callback(null, true);
         if (origin.startsWith("http://localhost")) return callback(null, true);
-        if (process.env.CLIENT_URL && origin.startsWith(process.env.CLIENT_URL)) return callback(null, true);
+        
+        // Strip trailing slashes for robust matching
+        const cleanOrigin = origin.replace(/\/$/, "");
+        const cleanClientUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.replace(/\/$/, "") : "";
+        
+        if (cleanClientUrl && cleanOrigin === cleanClientUrl) return callback(null, true);
+        
         callback(new Error("Not allowed by CORS"));
     },
     credentials: true

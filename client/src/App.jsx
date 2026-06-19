@@ -12,7 +12,7 @@ import Pricing from './pages/Pricing'
 import InterviewReport from './pages/InterviewReport'
 import ResumeTools from './pages/ResumeTools'
 
-export const ServerUrl  = import.meta.env.VITE_SERVER_URL || "http://localhost:8000"
+export const ServerUrl  = (import.meta.env.VITE_SERVER_URL || "http://localhost:8000").replace(/\/$/, "");
 
 function App() {
 
