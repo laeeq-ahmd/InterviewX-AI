@@ -12,7 +12,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 8000
+        value: "8000"
       - key: MONGODB_URL
         sync: false        # set manually in Render dashboard
       - key: JWT_SECRET
@@ -50,9 +50,8 @@ services:
   # ── ChromaDB Vector Store ────────────────────────────────────────
   - type: web
     name: careerx-chromadb
-    runtime: docker
-    image:
-      url: docker.io/chromadb/chroma:latest
+    runtime: image
+    image: docker.io/chromadb/chroma:latest
     region: singapore
     plan: free
     # NOTE: Free tier Render services spin down after 15 min inactivity.
