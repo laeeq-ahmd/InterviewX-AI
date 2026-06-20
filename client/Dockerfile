@@ -1,5 +1,6 @@
 # Build Stage
-FROM node:18-alpine as builder
+# hadolint ignore=DL3006
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
@@ -10,10 +11,13 @@ RUN npm install
 # Copy source files
 COPY . .
 
-# Run the vite build process (will fail fast if code has errors)
-# Ensure environment variables are passed in during docker compose build
+# VITE_ variables are PUBLIC frontend keys intentionally baked into the build.
+# Firebase API Key and Razorpay Key ID are designed to be client-side visible.
+# hadolint ignore=DL3025
 ARG VITE_SERVER_URL
+# hadolint ignore=DL3025
 ARG VITE_FIREBASE_APIKEY
+# hadolint ignore=DL3025
 ARG VITE_RAZORPAY_KEY_ID
 
 ENV VITE_SERVER_URL=$VITE_SERVER_URL
