@@ -7,22 +7,9 @@ data:
   PORT: "8000"
   CHROMA_URL: "http://chromadb-service:8001"
 ---
-# IMPORTANT: Never commit real secrets here.
-# Use kubectl create secret or an external secrets manager (AWS Secrets Manager, SealedSecrets).
-# These are placeholder values only — replace via kubectl before deploying.
-apiVersion: v1
-kind: Secret
-metadata:
-  name: backend-secrets
-  namespace: interviewx
-type: Opaque
-stringData:
-  MONGODB_URL: "your_mongodb_url"
-  JWT_SECRET: "your_jwt_secret"
-  OPENROUTER_API_KEY: "your_openrouter_api_key"
-  RAZORPAY_KEY_ID: "your_razorpay_key_id"
-  RAZORPAY_KEY_SECRET: "your_razorpay_key_secret"
----
+# Secrets are NOT stored here.
+# Apply them separately before deploying:
+#   kubectl apply -f k8s/secrets.yaml   (copied from secrets.template.yaml)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,7 +27,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: your-dockerhub-user/interviewx-backend:latest # Replace with your image registry
+          image: laeeqahmd/careerx-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -49,6 +36,18 @@ spec:
                 name: backend-config
             - secretRef:
                 name: backend-secrets
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service

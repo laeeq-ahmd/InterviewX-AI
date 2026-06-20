@@ -24,3 +24,6 @@ Thumbs.db
 
 # misc
 coverage/
+
+# Kubernetes — real secrets file (copy from secrets.template.yaml and fill in)
+k8s/secrets.yaml

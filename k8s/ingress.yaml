@@ -4,13 +4,13 @@ metadata:
   name: interviewx-ingress
   namespace: interviewx
   annotations:
-    kubernetes.io/ingress.class: "traefik"
-    # To enable HTTPS later with Let's Encrypt / Cert-Manager
-    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-    # Replace with your actual EC2 public DNS / elastic IP / domain
-    - host: interviewx.yourdomain.com 
+    # Locally: add "$(minikube ip) careerx.local" to /etc/hosts
+    # See k8s/deploy-local.sh for the automated one-command setup
+    - host: careerx.local
       http:
         paths:
           - path: /api
