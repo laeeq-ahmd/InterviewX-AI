@@ -90,7 +90,11 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 ## Kubernetes Local Setup (Minikube)
 
-The entire application can be deployed locally using a fully configured Kubernetes cluster via Minikube. All Docker images are available publicly on DockerHub.
+The entire application is fully containerized and the microservices are orchestrated using Kubernetes. The custom application images are hosted publicly on DockerHub:
+- **Frontend Image:** [`laeeqahmd/careerx-frontend:latest`](https://hub.docker.com/r/laeeqahmd/careerx-frontend)
+- **Backend Image:** [`laeeqahmd/careerx-backend:latest`](https://hub.docker.com/r/laeeqahmd/careerx-backend)
+
+When deployed, the Kubernetes cluster automatically pulls these custom images alongside the official `chromadb/chroma:latest` infrastructure image.
 
 ### Prerequisites
 - Docker Desktop
