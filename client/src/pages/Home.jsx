@@ -175,7 +175,7 @@ function Home() {
                   </div>
 
                   <div className='inline-flex items-center gap-1 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3'>
-                    ⚡ ONE-CLICK CUSTOMIZER
+                    ONE-CLICK CUSTOMIZER
                   </div>
 
                   <h3 className='font-bold text-xl mb-3'>Tailor Resume to Any Job</h3>
