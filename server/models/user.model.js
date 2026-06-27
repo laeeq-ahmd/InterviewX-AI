@@ -10,6 +10,17 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+    // Only set for email/password users. Google users have no password.
+    password: {
+        type: String,
+        default: null
+    },
+    // "google" or "email" — prevents mixing login methods on the same email
+    authProvider: {
+        type: String,
+        enum: ["google", "email"],
+        default: "google"
+    },
     credits: {
         type: Number,
         default: 1000
